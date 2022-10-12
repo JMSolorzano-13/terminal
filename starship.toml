@@ -1,0 +1,50 @@
+format = """
+$username\
+$hostname\
+$directory\
+$aws\
+$git_branch\
+$git_state\
+$git_status\
+$git_metrics\
+$terraform\
+$fill\
+$python\
+$cmd_duration $jobs $time\
+$line_break\
+$character"""
+
+[username]
+format ="[$user](notion://www.notion.so/jmsolorzano/$style) in "
+
+[aws]
+format = '|aws [($profile )(\($region\) )(\[$duration\] )](notion://www.notion.so/jmsolorzano/$style)'
+
+[python]
+format = '|py [${pyenv_prefix}(${version} )(\($virtualenv\) )](notion://www.notion.so/jmsolorzano/$style)'
+
+[terraform]
+format = "|terr [- $workspace](notion://www.notion.so/jmsolorzano/$style)"
+
+[fill]
+symbol = " "
+
+[directory]
+style = "blue"
+read_only = " ^"
+truncation_length = 4
+truncate_to_repo = false
+
+[character]
+success_symbol = "[❯](bold purple)"
+error_symbol = "[❯](notion://www.notion.so/jmsolorzano/red)"
+vicmd_symbol = "[❮](notion://www.notion.so/jmsolorzano/green)"
+
+[git_branch]
+format = "|git [$branch](notion://www.notion.so/jmsolorzano/$style) "
+style = "bright-black"
+
+[jobs]
+symbol = "|jobs"
+style = "bold red"
+number_threshold = 1
