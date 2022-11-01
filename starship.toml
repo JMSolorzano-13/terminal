@@ -14,17 +14,23 @@ $cmd_duration $jobs $time\
 $line_break\
 $character"""
 
+# ~/.config/starship.toml
+
 [username]
-format ="[$user](notion://www.notion.so/jmsolorzano/$style) in "
+style_user = "white bold"
+style_root = "black bold"
+format = "[$user]($style) || "
+disabled = false
+show_always = true
 
 [aws]
-format = '|aws [($profile )(\($region\) )(\[$duration\] )](notion://www.notion.so/jmsolorzano/$style)'
+format = ' | aws ($profile )(\($region\) )(\[$duration\] )'
 
 [python]
-format = '|py [${pyenv_prefix}(${version} )(\($virtualenv\) )](notion://www.notion.so/jmsolorzano/$style)'
+format = ' | py ${pyenv_prefix}(${version} )(\($virtualenv\) )'
 
 [terraform]
-format = "|terr [- $workspace](notion://www.notion.so/jmsolorzano/$style)"
+format = " | terr - $workspace"
 
 [fill]
 symbol = " "
@@ -37,14 +43,16 @@ truncate_to_repo = false
 
 [character]
 success_symbol = "[❯](bold purple)"
-error_symbol = "[❯](notion://www.notion.so/jmsolorzano/red)"
-vicmd_symbol = "[❮](notion://www.notion.so/jmsolorzano/green)"
+error_symbol = "❯"
+vicmd_symbol = "❮"
 
 [git_branch]
-format = "|git [$branch](notion://www.notion.so/jmsolorzano/$style) "
+format = " | git $branch "
 style = "bright-black"
 
+# ~/.config/starship.toml
+
 [jobs]
-symbol = "|jobs"
-style = "bold red"
-number_threshold = 1
+symbol = "+ "
+number_threshold = 4
+symbol_threshold = 0
