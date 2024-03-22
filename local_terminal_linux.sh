@@ -15,13 +15,14 @@ if [ ! -d "/tmp/terminal-config" ]; then
 fi
 
 # Update and upgrade system packages
-apt update -y && apt upgrade -y
+sudo apt update -y
+sudo rm /var/lib/dpkg/lock-frontend
+sudo dpkg --configure -a
+sudo apt install -y ca-certificates curl gnupg lsb-release
 
-# Install essential packages
-apt install -y git
 
 # Install Docker
-apt install -y ca-certificates curl gnupg lsb-release
+sudo apt install -y ca-certificates curl gnupg lsb-release
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 
@@ -30,26 +31,22 @@ sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Add user to docker and sudo groups
-usermod -aG docker "$USER_LOCAL"
-usermod -aG sudo "$USER_LOCAL"
-
-# Enable passwordless sudo for the user
-echo "$USER_LOCAL ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
+sudo usermod -aG docker "$USER_LOCAL"
 
 # Disable password authentication for SSH
-sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-systemctl restart sshd
-sed -i 's/^#PasswordAuthentication no/PasswordAuthentication no/' /etc/ssh/sshd_config
-sed -i 's/^#PermitEmptyPasswords no/PermitEmptyPasswords no/' /etc/ssh/sshd_config
-systemctl restart sshd.service
+sudo sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+sudo systemctl restart sshd
+sudo sed -i 's/^#PasswordAuthentication no/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i 's/^#PermitEmptyPasswords no/PermitEmptyPasswords no/' /etc/ssh/sshd_config
+sudo systemctl restart sshd.service
 
 # Add GitHub and GitLab hosts to known_hosts
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
 
 # Increase SSH timeout
-sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 3600/g' /etc/ssh/sshd_config
-sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 24/g' /etc/ssh/sshd_config
+sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 3600/g' /etc/ssh/sshd_config
+sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 24/g' /etc/ssh/sshd_config
 
 # Install Micro editor
 curl https://getmic.ro | bash
@@ -57,33 +54,31 @@ sudo chown root:root micro
 sudo mv micro /usr/bin
 
 # Install Fish shell and Ranger file manager
-sudo -u "$USER_LOCAL" apt install -y fish ranger
+sudo apt install -y fish ranger
 
 # Change the user's default shell to Fish
-sudo -u "$USER_LOCAL" chsh -s "$(which fish)" "$USER_LOCAL"
+sudo chsh -s "$(which fish)" "$USER_LOCAL"
 
 # Install Starship prompt for Fish
-sudo -u "$USER_LOCAL" sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- -f
-sudo -u "$USER_LOCAL" fish -c "starship init fish | source"
+sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- -f
+sudo fish -c "Hi Juan, Lets go ahead !!"
 
 # Copy configuration files
-sudo rm -rf "$MANAGER_HOME/.config/fish"
-sudo rm -rf "$MANAGER_HOME/.config/starship.toml"
-sudo -u "$USER_LOCAL" mkdir -p "$MANAGER_HOME/.config/ranger"
-sudo -u "$USER_LOCAL" mkdir -p "$MANAGER_HOME/.config/micro"
+sudo mkdir -p "$MANAGER_HOME/.config/ranger"
+sudo mkdir -p "$MANAGER_HOME/.config/micro"
 sudo chmod -R 777 "$MANAGER_HOME/.config/ranger"
 sudo chmod -R 777 "$MANAGER_HOME/.config/micro"
 sudo chmod -R 777 "$MANAGER_HOME/.config/fish"
 sudo chmod -R 777 /tmp
-sudo -u "$USER_LOCAL" cp -r /tmp/terminal-config/* "$MANAGER_HOME/.config/fish"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/starship.toml" "$MANAGER_HOME/.config/starship.toml"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/commands.py" "$MANAGER_HOME/.config/ranger/commands.py"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/commands_full.py" "$MANAGER_HOME/.config/ranger/commands_full.py"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/rc.conf" "$MANAGER_HOME/.config/ranger/rc.conf"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/rifle.conf" "$MANAGER_HOME/.config/ranger/rifle.conf"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/scope.sh" "$MANAGER_HOME/.config/ranger/scope.sh"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/settings.json" "$MANAGER_HOME/.config/micro/settings.json"
-sudo -u "$USER_LOCAL" cp "$MANAGER_HOME/.config/fish/bindings.json" "$MANAGER_HOME/.config/micro/bindings.json"
+sudo cp -r /tmp/terminal-config/* "$MANAGER_HOME/.config/fish"
+sudo cp "$MANAGER_HOME/.config/fish/starship.toml" "$MANAGER_HOME/.config/starship.toml"
+sudo cp "$MANAGER_HOME/.config/fish/commands.py" "$MANAGER_HOME/.config/ranger/commands.py"
+sudo cp "$MANAGER_HOME/.config/fish/commands_full.py" "$MANAGER_HOME/.config/ranger/commands_full.py"
+sudo cp "$MANAGER_HOME/.config/fish/rc.conf" "$MANAGER_HOME/.config/ranger/rc.conf"
+sudo cp "$MANAGER_HOME/.config/fish/rifle.conf" "$MANAGER_HOME/.config/ranger/rifle.conf"
+sudo cp "$MANAGER_HOME/.config/fish/scope.sh" "$MANAGER_HOME/.config/ranger/scope.sh"
+sudo cp "$MANAGER_HOME/.config/fish/settings.json" "$MANAGER_HOME/.config/micro/settings.json"
+sudo cp "$MANAGER_HOME/.config/fish/bindings.json" "$MANAGER_HOME/.config/micro/bindings.json"
 sudo chmod -R 777 "$MANAGER_HOME/.config"
 
 # Add kernel parameters for Docker requirements
