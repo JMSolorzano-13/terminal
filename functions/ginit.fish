@@ -1,6 +1,5 @@
 function ginit
     set branch $argv[1] ;
-    set commit_message $argv[2] ;
     set remote_url $argv[3] ;
 
     # Check if all required parameters are provided
@@ -11,23 +10,25 @@ function ginit
 
     # Initialize a new Git repository
     git init ;
-
-    # Configure user email and name
-    git config user.email "juan.solorzano@globalsitek.com" ;
-    git config user.name "JMSolorzano-13" ;
+    echo "Initialize git folder."
 
     # Create a new branch and switch to it
     git checkout -b $branch ;
+    echo "Create and checkuot branch $branch."
 
     # Add all changes
     git add . ;
+    echo "Add all changes to commit."
 
     # Commit changes with the provided message
-    git commit -m "$commit_message" ;
+    git commit -m "[INIT]" ;
+    echo "Add message to commit."
 
     # Add the remote repository
     git remote add origin $remote_url ;
+    echo "Add remote repository."
 
     # Push changes to the remote repository
     git push -u origin $branch ;
+    echo "Push to new repository, new branch."
 end
