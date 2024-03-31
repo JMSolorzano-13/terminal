@@ -16,13 +16,17 @@ function gpush
 
     # Switch to the specified branch
     git checkout $branch ;
+    echo "Checkout branch $branch."
 
     # Add all changes
     git add . ;
+    echo "Add code to commit."
 
     # Commit changes with the provided message
     git commit -m "$commit_message" ;
+    echo "Set commit message."
 
     # Push changes to the remote repository
+    echo "Start to push code."
     git push -u origin $branch ;
 end
