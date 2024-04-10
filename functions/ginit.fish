@@ -1,9 +1,9 @@
 function ginit
     set branch $argv[1] ;
-    set remote_url $argv[3] ;
+    set remote_url $argv[2] ;
 
     # Check if all required parameters are provided
-    if test -z "$branch" -o -z "$commit_message" -o -z "$remote_url"
+    if test -z "$branch" -o -z "$remote_url"
         echo "Error: All parameters are required: branch, commit message, and remote URL."
         return 1
     end
